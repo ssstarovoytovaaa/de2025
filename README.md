@@ -230,10 +230,10 @@ exit
 	<p>Сохранить изменения</p>
 		<pre><code>esc + : + wq!</code></pre>
 	<p>!!!НА BR/HQ-RTR ДЕЛАЕМ ВСЕ ТОЖЕ САМОЕ!!!</p>
-		<pre><code>useradd net_admin -G wheel</code></pre>
-		<pre><code>passwd net_admin</code></pre>
-		<pre><code>P@$$word</code></pre>
-		<pre><code>vim /etc/sudoers</code></pre>
+		<pre><code>	useradd net_admin -G wheel</code></pre>
+		<pre><code>	passwd net_admin</code></pre>
+		<pre><code>	P@$$word</code></pre>
+		<pre><code>	vim /etc/sudoers</code></pre>
 	<p>Снять комментарий со строки WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL </p>
 <h1>Настройка безопасного удаленного доступа</h1>
 <h2>HQ-SRV, BR-SRV</h2>
@@ -246,5 +246,20 @@ exit
 			<pre><code>Authorized access only</code></pre>
 		<p>Поставить в автозагрузку и перезапустить:</p>
 			<pre><code>systemctl enable sshd</code></pre>
-			<pre><code>systemctl restart sshd</code></pre>	
+			<pre><code>systemctl restart sshd</code></pre>
+<p>НА МАШИНАХ RTR и CLI ТОЖЕ РЕДАЧИМ SSH</p>
+<h1>Настройка DHCP</h1>
+<h2>HQ-RTR</h2>
+	<p>Если не скачан пакет, то:</p>
+		<pre><code>apt-get install dhcp-server -y</code></pre>
+	<p>Копируем файл:</p>
+		<pre><code>cp /etc/dhcp/dhcpd.conf.sample /etc/dhcp/dhcpd.conf</code></pre>
+	<p>Редачим, как на фото:</p>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dhcp.png" alt="Описание изображения">
+	<p>Добавляем VLAN:</p>
+		<pre><code>vim /etc/sysconfig/dhcpd </code></pre>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/vlan.png" alt="Описание изображения">
+	<p>Поставить в автозагрузку и перезапустить:</p>
+		<pre><code>systemctl enable dhcpd --now</code></pre>
+		<pre><code>systemctl restart dhcpd</code></pre>
 </details>

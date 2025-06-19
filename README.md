@@ -254,7 +254,7 @@ exit
 		<pre><code>apt-get install dhcp-server -y</code></pre>
 	<p>Копируем файл:</p>
 		<pre><code>cp /etc/dhcp/dhcpd.conf.sample /etc/dhcp/dhcpd.conf</code></pre>
-	<p>Редачим, как на фото:</p>
+	<p>Редачим, как на фото (там не долго, по этому картинка):</p>
 		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dhcp.png" alt="Описание изображения">
 	<p>Добавляем VLAN:</p>
 		<pre><code>vim /etc/sysconfig/dhcpd </code></pre>
@@ -262,4 +262,28 @@ exit
 	<p>Поставить в автозагрузку и перезапустить:</p>
 		<pre><code>systemctl enable dhcpd --now</code></pre>
 		<pre><code>systemctl restart dhcpd</code></pre>
+<h2>HQ-CLI</h2>
+	<p>CTRL + ALT + F2:</p>
+	<p>Смотрим MAC-адрес у ens160, делаем скрин или куда-то записываем и вписываем его сюда:</p>
+		<pre><code>vim /etc/dhcp/dhcpd.conf</code></pre>
+<h2>HQ-RTR</h2>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dhcp2.png" alt="Описание изображения">
+	<p>Перезапустить:</p>
+		<pre><code>systemctl restart dhcpd</code></pre>
+<h2>HQ-CLI</h2>
+	<p>Далее по картинкам:</p>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dhcp3.png" alt="Описание изображения">
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dhcp4.png" alt="Описание изображения">
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dhcp5.png" alt="Описание изображения">
+	<p>Убрать галочки:</p>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dhcp6.png" alt="Описание изображения">
+	<p>CTRL + ALT + F2:</p>
+		<pre><code>dhcpcd -n</code></pre>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dhcp7.png" alt="Описание изображения">
+<h1>Настройка DNS</h1>
+<h2>HQ-RTR, BR-RTR</h2>
+	<pre><code>firewall-cmd --set-default-zone=trusted</code></pre>
+<h2>HQ-SRV</h2>
+
+
 </details>

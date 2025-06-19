@@ -17,15 +17,16 @@
 <details>
     <summary>РЕШЕНИЕ</summary>
         <html lang="ru">
-    <p>Настройка имен устройств на ALT Linux:</p>
-    <pre><code>hostnamectl set-hostname ^name^</code></pre>
-    <p>Добавить в файл vim /etc/modules строки:</p>
-    <p><code>ip_gre</code></p>
-        <p><code>ipip</code></p>
-    <p>Включить форвардинг пакетов в файле vim /etc/net/sysctl.conf:</p>
-    <pre><code>net.ipv4.ip_forward = 1</code></pre>
-    <p>IP адресация, туннель, подъинтерфейсы для VLAN: vim /etc/netplan/config.yaml</p>
-    <p>HQ-RTR</p>
+	<h1>HQ-RTR, BR-RTR</h1>
+    		<p>Настройка имен устройств на ALT Linux:</p>
+    		<pre><code>hostnamectl set-hostname ^name^</code></pre>
+    		<p>Добавить в файл vim /etc/modules строки:</p>
+    		<p><code>ip_gre</code></p>
+        	<p><code>ipip</code></p>
+    		<p>Включить форвардинг пакетов в файле vim /etc/net/sysctl.conf:</p>
+    		<pre><code>net.ipv4.ip_forward = 1</code></pre>
+    		<p>IP адресация, туннель, подъинтерфейсы для VLAN: vim /etc/netplan/config.yaml</p>
+<p>HQ-RTR</p>
 <pre><code>
     network:
         ethernets:
@@ -67,8 +68,8 @@
                 link: ens192
                 addresses: [192.168.99.1/29]
         version: 2
-    </code></pre>
-    <p>HQ-RTR</p>
+</code></pre>
+<p>BR-RTR</p>
 <pre><code>
     network:
         ethernets:
@@ -99,7 +100,7 @@
                     - 10.10.10.2/30
                 ttl: 30
         version: 2
-    </code></pre>
+</code></pre>
     <p>Проверка</p>
 		<pre><code>netplan apply</code></pre>
 	<p>Перезапуск</p>
@@ -113,4 +114,52 @@
 		<pre><code>ping 8.8.8.8</code></pre>
 		<pre><code>ping 10.10.10.1</code></pre>
 		<pre><code>ping 10.10.10.2</code></pre>
+<h1>HQ-SRV, BR-SRV</h1>
+		<p>Настройка имен устройств на ALT Linux:</p>
+		<pre><code>hostnamectl set-hostname ^name^</code></pre>
+	<p>IP адресация, туннель, подъинтерфейсы для VLAN: vim /etc/netplan/config.yaml</p>
+	<p>HQ-SRV</p>
+<pre><code>
+    network:
+        ethernets:
+            ens224:
+                dhcp4: false
+                dhcp6: false
+                addresses: [192.168.55.х/24]
+            ens192:
+                dhcp4: false
+                dhcp6: false
+			vlans:
+            vlan.100:
+                id: 100
+                link: ens192
+                addresses: [192.168.100.2/26]
+                routes:
+                    - to: default
+                    via: 192.168.100.1
+                nameservers:
+                    addresses: [8.8.8.8]
+                    search: [axample.com]
+        version: 2
+</code></pre>
+	<p>BR-SRV</p>
+<pre><code>
+    network:
+        ethernets:
+            ens224:
+                dhcp4: false
+                dhcp6: false
+                addresses: [192.168.55.х/24]
+            ens192:
+                dhcp4: false
+                addresses: [192.168.0.2/27]
+                routes:
+                    - to: default
+                    via: 192.168.0.1
+                nameservers:
+                    addresses: [8.8.8.8]
+                    search: [axample.com]
+        version: 2
+</code></pre>
+
 </details>

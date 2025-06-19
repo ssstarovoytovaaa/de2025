@@ -230,14 +230,21 @@ exit
 	<p>Сохранить изменения</p>
 		<pre><code>esc + : + wq!</code></pre>
 	<p>!!!НА BR/HQ-RTR ДЕЛАЕМ ВСЕ ТОЖЕ САМОЕ!!!</p>
-		<pre><code>	useradd net_admin -G wheel</code></pre>
-		<pre><code>	passwd net_admin</code></pre>
-		<pre><code>	P@$$word</code></pre>
-		<pre><code>	vim /etc/sudoers</code></pre>
+		<pre><code>useradd net_admin -G wheel</code></pre>
+		<pre><code>passwd net_admin</code></pre>
+		<pre><code>P@$$word</code></pre>
+		<pre><code>vim /etc/sudoers</code></pre>
 	<p>Снять комментарий со строки WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL </p>
 <h1>Настройка безопасного удаленного доступа</h1>
 <h2>HQ-SRV, BR-SRV</h2>
-		<p>Открыть конфигурационный файл службы sshd и внести изменения:</p>
+		<p>Открыть конфигурационный файл службы sshd и внести изменения НА ОБЕИХ МАШИНАХ:</p>
 			<pre><code>vim /etc/openssh/sshd_config</code></pre>
 		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/ssh.png" alt="Описание изображения">
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/ssh2.png" alt="Описание изображения">
+		<p>Создать файл для баннера и внести текст сообщения НА ОБЕИХ МАШИНАХ:</p>
+			<pre><code>vim /etc/banner</code></pre>
+			<pre><code>Authorized access only</code></pre>
+		<p>Поставить в автозагрузку и перезапустить:</p>
+			<pre><code>systemctl enable sshd</code></pre>
+			<pre><code>systemctl restart sshd</code></pre>	
 </details>

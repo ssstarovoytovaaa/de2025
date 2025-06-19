@@ -17,7 +17,8 @@
 <details>
     <summary>РЕШЕНИЕ</summary>
         <html lang="ru">
-	<h1>HQ-RTR, BR-RTR</h1>
+	<h1>Настройка адресации</h1>
+		<h2>HQ-RTR, BR-RTR</h2>
     		<p>Настройка имен устройств на ALT Linux:</p>
     		<pre><code>hostnamectl set-hostname ^name^</code></pre>
     		<p>Добавить в файл vim /etc/modules строки:</p>
@@ -114,10 +115,11 @@
 		<pre><code>ping 8.8.8.8</code></pre>
 		<pre><code>ping 10.10.10.1</code></pre>
 		<pre><code>ping 10.10.10.2</code></pre>
-<h1>HQ-SRV, BR-SRV</h1>
+<h1>Настройка адресации</h1>		
+<h2>HQ-SRV, BR-SRV</h2>
 		<p>Настройка имен устройств на ALT Linux:</p>
 		<pre><code>hostnamectl set-hostname ^name^</code></pre>
-	<p>IP адресация, туннель, подъинтерфейсы для VLAN: vim /etc/netplan/config.yaml</p>
+	<p>IP адресация: vim /etc/netplan/config.yaml</p>
 	<p>HQ-SRV</p>
 <pre><code>
     network:
@@ -140,6 +142,7 @@
                 nameservers:
                     addresses: [8.8.8.8]
                     search: [axample.com]
+            
         version: 2
 </code></pre>
 	<p>BR-SRV</p>
@@ -159,7 +162,79 @@
                 nameservers:
                     addresses: [8.8.8.8]
                     search: [axample.com]
+            
         version: 2
 </code></pre>
+<p>Проверить доступность интернета:</p>
+	<pre><code>ping ya.ru</code></pre>
+	<pre><code>ping 8.8.8.8</code></pre>
+<h1>Настройка OSPF</h1>
+<h1>HQ-RTR, BR-RTR</h1>
+	<p>Добавить протокол OSPF в firewalld:</p>
+		<pre><code>firewall-cmd --permanent --add-protocol=ospf</code></pre>
+		<pre><code>firewall-cmd --reload</code></pre>
+	<p>Установить пакет FRR</p>
+		<pre><code>apt-get install frr -y</code></pre>
+	<p>Включить службы ospfd, zebra:</p>
+		<pre>ospfd=yes</pre>
+		<pre>zebra=yes</pre>
+	<p>Заполнить файл:</p>
+		<pre><code>vim /etc/frr/frr.conf</code></pre>
+<p>HQ-RTR</p>
+<pre><code>	
+interface ipip30
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 KEY
+ ip ospf mtu-ignore
+ no ip ospf passive
+exit
+!
+router ospf
+ passive-interface default
+ network 10.10.10.0/30 area 0
+ network 192.168.100.0/26 area 0
+ network 192.168.200.0/28 area 0
+exit
+!
+</code></pre>
+<p>BR-RTR</p>
+<pre><code>	
+interface ipip30
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 KEY
+ ip ospf mtu-ignore
+ no ip ospf passive
+exit
+!
+router ospf
+ passive-interface default
+ network 10.10.10.0/30 area 0
+ network 192.168.0.0/27 area 0
+exit
+!
+</code></pre>
+		<p>Поставить службу frr в автозагрузку и включить:</p>
+			<pre><code>systemctl enable --now frr</code></pre>
+		<p>Проверить таблицу маршрутизации:</p>
+			<pre><code>ip route</code></pre>
+<h1>Создание локальных учетных записей (вроде можно не делать)</h1>
+<h2>HQ-SRV</h2>
+	<p>Создать пользователя:</p>
+		<pre><code>useradd sshuser -G wheel -u 1010</code></pre>
+	<p>Назначить пароль: </p>
+		<pre><code>passwd sshuser ^P@ssw0rd^</code></pre>
+	<p>Проверить создание пользователя: </p>
+		<pre><code>cat /etc/passwd </code></pre>
+	<p>Настроить запуск sudo без дополнительной аутентификации:</p>
+		<pre><code>vim /etc/sudoers</code></pre>
+	<p>Снять комментарий со строки WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL </p>
+	<p>Сохранить изменения</p>
+		<pre><code>esc + : + wq!</code></pre>
+	<p>!!!НА BR/HQ-RTR ДЕЛАЕМ ВСЕ ТОЖЕ САМОЕ!!!</p>
+		<pre><code>	useradd net_admin -G wheel</code></pre>
+		<pre><code>	passwd net_admin</code></pre>
+		<pre><code>	P@$$word</code></pre>
+		<pre><code>	vim /etc/sudoers</code></pre>
+	<p>Снять комментарий со строки WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL </p>
 
 </details>

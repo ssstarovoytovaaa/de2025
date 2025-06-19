@@ -238,6 +238,6 @@ exit
 <h1>Настройка безопасного удаленного доступа</h1>
 <h2>HQ-SRV, BR-SRV</h2>
 		<p>Открыть конфигурационный файл службы sshd и внести изменения:</p>
-			<pre><code>vim /etc/openssh/sshd_config  </code></pre>
+			<pre><code>vim /etc/openssh/sshd_config</code></pre>
 		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/ssh.png" alt="Описание изображения">
 </details>

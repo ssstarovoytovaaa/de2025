@@ -292,31 +292,92 @@ exit
 			<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dns.png" alt="Описание изображения">
 		<pre><code>ls</code></pre>
 			<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dns2.png" alt="Описание изображения">
-		<pre><code>cp rfc1912.conf local.conf ^overwrite? ^Y^</code></pre>
+		<pre><code>cp rfc1912.conf local.conf ^overwrite? Y^</code></pre>
 		<pre><code>vim local.conf</code></pre>
-			<pre><code>
-			zone "au-team.irpo" {
-				type: master;
-				file "au-team.irpo";
-				allow-update {any;};
-				allow-transfer {any;};
-				allow-query {any};
-			};
-			zone "100.168.192.in-addr.arpa" {
-				type: master;
-				file "100.168.192.rev";
-				allow-update {any;};
-				allow-transfer {any;};
-				allow-query {any};
-			};
-			zone "200.168.192.in-addr.arpa" {
-				type: master;
-				file "200.168.192.rev";
-				allow-update {any;};
-				forwarders {};
-			};
-			</code></pre>
-		<p>Сохранить</p>
-		
-		
+<pre><code>
+	zone "au-team.irpo" {
+		type: master;
+		file "au-team.irpo";
+		allow-update {any;};
+		allow-transfer {any;};
+		allow-query {any};
+		};	
+	zone "100.168.192.in-addr.arpa" {
+		type: master;
+		file "100.168.192.rev";
+		allow-update {any;};
+		allow-transfer {any;};
+		allow-query {any};
+		};
+	zone "200.168.192.in-addr.arpa" {
+		type: master;
+		file "200.168.192.rev";
+		allow-update {any;};
+		forwarders {};
+		};
+</code></pre>
+	<p>Сохранить</p>
+	<pre><code>cd zone (/etc/bind/zone)</code></pre>
+	<pre><code>cp localdomain au-team.irpo</code></pre>
+	<pre><code>cp localdomain 100.l68.192.rev</code></pre>
+	<pre><code>vim au-team.irpo</code></pre>
+	<pre><code>
+	$TTL	1D
+	@	IN	SOA		au-team.irpo. root.au-team.irpo. (
+						2025020602		;serial
+						12H			;refresh
+						1H			;retry
+						1W			;expire
+						1H			;ncache
+						)
+	@	IN		NS	hq-srv.au-team.irpo.
+	hq-srv	IN		A	192.168.100.2
+	hq-rtr 	IN 		A	192.168.100.1
+	hq-cli	IN		A	192.168.200.10
+	wiki				CNAME	hq-rtr
+	moodle				CNAME	hq-rtr
+	br-srv	IN		A	192.168.0.2
+	br-rtr 	IN		A	192.168.0.1
+	</code></pre>
+	<pre><code>vim 100.168.192.rev</code></pre>
+	<pre><code>
+	$TTL	1D
+	@	IN	SOA	hq-srv.au-team.irpo. root.au-team.irpo. (
+							2025020602		;serial
+							12H			;refresh
+							1H			;retry
+							1W			;expire
+							1H			;ncache
+							)
+	@	IN	NS	hq-srv.au-team.irpo.
+	1	IN	PTR	hq-rtr.au-team.irpo.
+	2 	IN 	PTR	hq-srv.au-team.irpo.
+	</code></pre>
+	<pre><code>cp 100.168.192.rev 200.168.192.rev</code></pre>
+	<pre><code>vim 200.168.192.rev</code></pre>
+	<pre><code>
+	$TTL	1D
+	@	IN	SOA	hq-srv.au-team.irpo. root.au-team.irpo. (
+							2025020602		;serial
+							12H			;refresh
+							1H			;retry
+							1W			;expire
+							1H			;ncache
+							)
+	@	IN	NS	hq-srv.au-team.irpo.
+	1	IN	PTR	hq-rtr.au-team.irpo.
+	10 	IN 	PTR	hq-cli.au-team.irpo.
+	</code></pre>
+	<p>Разрешить доступ к каталогу /etc/bind/zone: </p>
+	<pre><code>chmod 777 -R /etc/bind/zone</code></pre>
+	<pre><code>systemctl enable bind --now</code></pre>
+	<pre><code>systemctl restart bind</code></pre>
+	<p>На всех узлах внести изменения в файл netplan (у hq-cli vim /etc/resolv.conf):</p>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dns3.png" alt="Описание изображения">
+	<pre><code>netplan apply</code></pre>
+	<p>hq-cli vim /etc/resolv.conf</p>
+	<pre><code>vim /etc/resolv.conf</code></pre>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dns4.png" alt="Описание изображения">
+	<p>После изменения на узлах, заходим на HQ-SRV</p>
+	<pre><code>systemctl restart bind</code></pre>
 </details>

@@ -284,6 +284,39 @@ exit
 <h2>HQ-RTR, BR-RTR</h2>
 	<pre><code>firewall-cmd --set-default-zone=trusted</code></pre>
 <h2>HQ-SRV</h2>
-
-
+	<p>Устанавливаем, если не установлено:</p>
+		<pre><code>apt-get install bind -y</code></pre>
+	<p>Перейти в каталог с настройками DNS:</p>
+		<pre><code>cd /etc/bind/ </code></pre>
+		<pre><code>vim options.conf</code></pre>		
+			<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dns.png" alt="Описание изображения">
+		<pre><code>ls</code></pre>
+			<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/dns2.png" alt="Описание изображения">
+		<pre><code>cp rfc1912.conf local.conf ^overwrite? ^Y^</code></pre>
+		<pre><code>vim local.conf</code></pre>
+			<pre><code>
+			zone "au-team.irpo" {
+				type: master;
+				file "au-team.irpo";
+				allow-update {any;};
+				allow-transfer {any;};
+				allow-query {any};
+			};
+			zone "100.168.192.in-addr.arpa" {
+				type: master;
+				file "100.168.192.rev";
+				allow-update {any;};
+				allow-transfer {any;};
+				allow-query {any};
+			};
+			zone "200.168.192.in-addr.arpa" {
+				type: master;
+				file "200.168.192.rev";
+				allow-update {any;};
+				forwarders {};
+			};
+			</code></pre>
+		<p>Сохранить</p>
+		
+		
 </details>

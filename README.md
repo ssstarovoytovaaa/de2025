@@ -381,3 +381,62 @@ exit
 	<p>После изменения на узлах, заходим на HQ-SRV</p>
 	<pre><code>systemctl restart bind</code></pre>
 </details>
+<body>
+    <h1>МОДУЛЬ 2</h1>
+</body>
+    <html lang="ru">
+    <p>1. Произведите базовую настройку устройств:</p>
+    <ul>
+      <li>Ниче сюда писать не буду, надоело уже</li>
+    </ul>
+<details>
+    <summary>РЕШЕНИЕ</summary>
+    <html lang="ru">
+	<h1>Ansible</h1>
+    <p>На всех хостах (кроме BR-SRVи HQ-SRV) настроить соответствующий доступ SSH:</p>
+	<pre><code>vim /etc/openssh/sshd_config</code></pre>
+		<img src="https://github.com/ssstarovoytovaaa/de2025/blob/main/sshh.png" alt="Описание изображения">
+	<p>Рестартим и добавляем в enable:</p>
+		<pre><code>systemctl enable sshd </code></pre>
+		<pre><code>systemctl restart sshd</code></pre>
+	<h1>BR-SRV</h1>
+		<p>Заходим под root и создаем ключ:</p>
+			<pre><code>ssh-keygen</code></pre>
+		<p>Далее скопируем ключи на хосты:</p>
+			<pre><code>ssh-copy-id hq-rtr</code></pre>
+			<pre><code>ssh-copy-id hq-cli</code></pre>
+			<pre><code>ssh-copy-id br-rtr</code></pre>
+		<p>Пишем logout и заходим под sshuser [P@ssword]:</p>
+			<pre><code>ssh-keygen</code></pre>
+			<pre><code>ssh-copy-id hq-srv -p 2024</code></pre>
+			<pre><code>ssh-copy-id br-srv -p 2024</code></pre>	
+		<p>Заходим под root. Если требуется устанавливаем ansible:</p>
+			<pre><code>apt-get install ansible -y</code></pre>
+		<p>Заполнить инвентарный файл /etc/ansible/hosts:</p>
+			<pre><code>vim /etc/ansible/hosts</code></pre>
+		<pre><code>
+[routers] 
+192.168.100.1 
+192.168.0.1 
+[servers] 
+192.168.0.2 ansible_connection=ssh ansible_ssh_port=2024 ansible_user=sshuser ansible_ssh_private_key_file=/home/sshuser/.ssh/id_rsa
+192.168.100.2 ansible_connection=ssh ansible_ssh_port=2024 ansible_user=sshuser ansible_ssh_private_key_file=/home/sshuser/.ssh/id_rsa
+[clients] 
+192.168.200.10
+		</code></pre>
+		<p>Конфигурационный файл /etc/ansible/ansible.cfg:</p>
+		<pre><code>vim /etc/ansible/ansible.cfg</code></pre>
+		<pre><code>
+inventory = /etc/ansible/hosts
+interpreter_python = auto_silent
+host_key_checking = False
+		</code></pre>
+		<p>Выполнить команду ping в ansible:</p>
+		<pre><code>ansible -m ping all</code></pre>
+<h1>RAID5 | NFS</h1>
+		<p>Брать отсюда:</p>
+		<a href="https://wsr39.readthedocs.io/en/latest/chapters/pm02/mdk_02_01_asos/linux/disk/mdadm/mdadm.html">RAID5</a>
+		<a href="https://wsr39.readthedocs.io/en/latest/chapters/pm02/mdk_02_01_asos/linux/file_system/nfs/examples/nfs_ex_01.html">NFS</a>
+		
+		
+    

@@ -437,6 +437,15 @@ host_key_checking = False
 		<p>Брать отсюда:</p>
 		<a href="https://wsr39.readthedocs.io/en/latest/chapters/pm02/mdk_02_01_asos/linux/disk/mdadm/mdadm.html">RAID5</a>
 		<a href="https://wsr39.readthedocs.io/en/latest/chapters/pm02/mdk_02_01_asos/linux/file_system/nfs/examples/nfs_ex_01.html">NFS</a>
-		
-		
-    
+<h1>ЛЮБИМЫЙ НАМИ YANDEX</h1>
+		<pre><code>apt-get install yandex-browser</code></pre>
+		<p>или</p>
+		<pre><code>apt-get install yandex-browser-stable</code></pre>
+<h1>Статическая трансляция портов</h1>
+<h2>BR-RTR</h2>
+	<pre><code>firewall-cmd --zone=trusted --add-forward-port=port=2024:proto=tcp:toport=2024:toaddr=192.168.0.2 --permanent</code></pre>
+	<pre><code>firewall-cmd --zone=trusted --add-forward-port=port=80:proto=tcp:toport=8080:toaddr=192.168.0.2 --permanent</code></pre>
+	<pre><code>firewall-cmd --reload</code></pre>
+<h2>HQ-RTR</h2>
+	<pre><code>firewall-cmd --zone=trusted --add-forward-port=port=2024:proto=tcp:toport=2024:toaddr=192.168.100.2 --permanent</code></pre>
+	<pre><code>firewall-cmd --reload</code></pre>
